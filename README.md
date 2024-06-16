@@ -43,6 +43,8 @@ colab链接
     <img src="images/karpathyminbpe.png" width="600"/>
 </div>
 
+你可以将name参数换成你想要的名字
+采用了`base64`编码方法，所以在`tokenizer.model`中看到的对应关系不同于一般的关系例如`'hi'`的`base64`编码为`'aGk'`，在文件中的对应为`'aGk =6151'`，而不是`'hi =6151'`，更多信息看[参考这里](https://blog.csdn.net/wo541075754/article/details/81734770)。
 
 ```python
 from pathlib import Path
@@ -56,7 +58,7 @@ import matplotlib.pyplot as plt
 tokenizer_path = "Meta-Llama-3-8B-Instruct/tokenizer.model"
 special_tokens = [
             "<|begin_of_text|>",
-            "<|end_of_text|>",
+            "<|endoftext|>", # now you can get tokenizer.eot_token
             "<|reserved_special_token_0|>",
             "<|reserved_special_token_1|>",
             "<|reserved_special_token_2|>",
@@ -67,6 +69,7 @@ special_tokens = [
             "<|eot_id|>",  # end of turn
         ] + [f"<|reserved_special_token_{i}|>" for i in range(5, 256 - 5)]
 mergeable_ranks = load_tiktoken_bpe(tokenizer_path)
+
 tokenizer = tiktoken.Encoding(
     name=Path(tokenizer_path).name,
     pat_str=r"(?i:'s|'t|'re|'ve|'m|'ll|'d)|[^\r\n\p{L}\p{N}]?\p{L}+|\p{N}{1,3}| ?[^\s\p{L}\p{N}]+[\r\n]*|\s*[\r\n]+|\s+(?!\S)|\s+",
