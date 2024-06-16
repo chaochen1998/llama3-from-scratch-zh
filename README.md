@@ -216,7 +216,7 @@ embedding_layer = torch.nn.Embedding(vocab_size, dim)
 embedding_layer.weight.data.copy_(model["tok_embeddings.weight"])
 
 # 获取未归一化的 token 嵌入
-token_embeddings_unnormalized = embedding_layer(tokens).to(torch.bfloat16)
+token_embeddings_unnormalized = embedding_layer(tokens).to(torch.bfloat16) # modelscope中的加载的权重是torch.bfloat16
 token_embeddings_unnormalized.shape
 ```
 
