@@ -43,8 +43,8 @@ colab链接
     <img src="images/karpathyminbpe.png" width="600"/>
 </div>
 
-你可以将name参数换成你想要的名字
-采用了`base64`编码方法，所以在`tokenizer.model`中看到的对应关系不同于一般的关系例如`'hi'`的`base64`编码为`'aGk'`，在文件中的对应为`'aGk =6151'`，而不是`'hi =6151'`，更多信息看[参考这里](https://blog.csdn.net/wo541075754/article/details/81734770)。
+
+`tiktoken`采用了`base64`编码方法，所以在`tokenizer.model`中看到的对应关系不同于一般的关系例如`'hi'`的`base64`编码为`'aGk'`，在文件中的对应为`'aGk =6151'`，而不是`'hi =6151'`，更多信息看[参考这里](https://blog.csdn.net/wo541075754/article/details/81734770)。
 
 ```python
 from pathlib import Path
@@ -68,13 +68,13 @@ special_tokens = [
             "<|reserved_special_token_4|>",
             "<|eot_id|>",  # end of turn
         ] + [f"<|reserved_special_token_{i}|>" for i in range(5, 256 - 5)]
-mergeable_ranks = load_tiktoken_bpe(tokenizer_path)
+mergeable_ranks = load_tiktoken_bpe(tokenizer_path) # 加载词汇表
 
 tokenizer = tiktoken.Encoding(
-    name=Path(tokenizer_path).name,
-    pat_str=r"(?i:'s|'t|'re|'ve|'m|'ll|'d)|[^\r\n\p{L}\p{N}]?\p{L}+|\p{N}{1,3}| ?[^\s\p{L}\p{N}]+[\r\n]*|\s*[\r\n]+|\s+(?!\S)|\s+",
-    mergeable_ranks=mergeable_ranks,
-    special_tokens={token: len(mergeable_ranks) + i for i, token in enumerate(special_tokens)},
+    name=Path(tokenizer_path).name, # 创建的tokenizer的名称，可以按需更换（str）
+    pat_str=r"(?i:'s|'t|'re|'ve|'m|'ll|'d)|[^\r\n\p{L}\p{N}]?\p{L}+|\p{N}{1,3}| ?[^\s\p{L}\p{N}]+[\r\n]*|\s*[\r\n]+|\s+(?!\S)|\s+", # 正则化公式，代表了处理词的一些方式
+    mergeable_ranks=mergeable_ranks, # 预设词汇表
+    special_tokens={token: len(mergeable_ranks) + i for i, token in enumerate(special_tokens)}, # 特殊词汇表
 )
 
 # 测试分词器编码和解码功能
@@ -99,8 +99,8 @@ hello world!
 
 ```python
 # 加载模型权重
-model = torch.load("Meta-Llama-3-8B-Instruct/consolidated.00.pth")
-print(json.dumps(list(model.keys())[:20], indent=4))
+model = torch.load("Meta-Llama-3-8B-Instruct/consolidated.00.pth") # model加载成功后是一个字典，就是使用torch.save(ANYMODEL.state_dict())语句保存下来的权重文件
+list(model.keys())[:20]
 ```
 
 ```bash
